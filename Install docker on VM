@@ -1,0 +1,32 @@
+###reference https://docs.docker.com/engine/install/debian/
+
+# Update the apt package index and install packages to allow apt to use a repository over HTTPS:
+sudo apt-get update
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+# Add Docker’s official GPG key:
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# Set up the stable repository
+echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install the latest docker engine
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+
+# Add your user to docker and activate group 
+# Replace user_xyz with your username, can use command "whoami" to check your username 
+whoami
+sudo usermod -aG docker user_xyz
+newgrp docker
+
+# You should be able to run this command 
+docker ps
