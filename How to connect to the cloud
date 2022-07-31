@@ -1,0 +1,15 @@
+$ gcloud auth login
+Go to the following link in your browser:
+
+https://accounts.google.com/o/oauth2/auth?response_type <...>
+
+Enter authorization code: 
+
+You are now logged in as [j<...>@gmail.com].
+Your current project is [None].  You can change this setting by running:
+  $ gcloud config set project PROJECT_ID
+
+How to check projects in the cloud:
+$ docker run --rm --volumes-from gcloud-config gcr.io/google.com/cloudsdktool/cloud-sdk:357.0.0 gcloud projects list
+PROJECT_ID                NAME                      PROJECT_NUMBER
+my-project-data-tutorial  My Project data tutorial  193<...>
