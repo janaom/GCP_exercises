@@ -1,0 +1,18 @@
+Use the gcloud alpha storage cp command:
+gcloud alpha storage cp OBJECT_LOCATION gs://DESTINATION_BUCKET_NAME/
+Where:
+
+    OBJECT_LOCATION is the local path to your object. For example, Desktop/dog.png.
+
+    DESTINATION_BUCKET_NAME is the name of the bucket to which you are uploading your object. For example, my-bucket.
+
+If successful, the response looks like the following example:
+
+Completed files 1/1 | 164.3kiB/164.3kiB
+
+example:
+gcloud alpha storage cp my-project-data-tutorial-12d27fc8fc45.json gs://tutorial_bucket_jana
+Copying file://my-project-data-tutorial-12d27fc8fc45.json to gs://tutorial_bucket_jana/my-project-data-tutorial-12d27fc8fc45.json
+  Completed files 1/1 | 2.3kiB/2.3kiB
+
+####different way: https://chenming.io/how-to-upload-files-into-cloud-storage-using-python-container/
