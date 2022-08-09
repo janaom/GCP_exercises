@@ -1,0 +1,76 @@
+#in Cloud Shell: create the taxirides dataset
+bq --location=us-west1 mk taxirides
+
+#create the taxirides.realtime table (empty schema that you will stream into later)
+bq --location=us-west1 mk \
+--time_partitioning_field timestamp \
+--schema ride_id:string,point_idx:integer,latitude:float,longitude:float,\
+timestamp:timestamp,meter_reading:float,meter_increment:float,ride_status:string,\
+passenger_count:integer -t taxirides.realtime
+
+#Create dataset. Dataset ID as taxirides, for Data location, select us-west1 (Oregon)
+#Create table. Name the table realtime
+#For the schema, click Edit as text and paste in the below:
+ride_id:string,
+point_idx:integer,
+latitude:float,
+longitude:float,
+timestamp:timestamp,
+meter_reading:float,
+meter_increment:float,
+ride_status:string,
+passenger_count:integer
+
+#Create a Cloud Storage Bucket. For Location type, click Multi-region
+
+#Set up a Dataflow Pipeline. In the Cloud Console, enter Dataflow API in the top search bar. Click on the result for Dataflow API. Click Manage. Click Disable API. Click Enable.
+#go to Dataflow. Click CREATE JOB FROM TEMPLATE.Enter streaming-taxi-pipeline as the Job name for your Dataflow job.
+#Under Regional endpoint, select us-west1 (Oregon).
+#Under Input Pub/Sub topic, click Enter topic Manually, enter projects/pubsub-public-data/topics/taxirides-realtime
+#Under BigQuery output table, enter <myprojectid>:taxirides.realtime
+#Under Temporary location, enter gs://<mybucket>/tmp/.
+#Show Optional Parameters: Max workers: 2; Number of workers: 2; Worker region: us-west1. Run job
+
+#Go to BigQuery: in the query EDITOR and click RUN:
+SELECT * FROM taxirides.realtime LIMIT 10
+#Run:
+WITH streaming_data AS (
+SELECT
+  timestamp,
+  TIMESTAMP_TRUNC(timestamp, HOUR, 'UTC') AS hour,
+  TIMESTAMP_TRUNC(timestamp, MINUTE, 'UTC') AS minute,
+  TIMESTAMP_TRUNC(timestamp, SECOND, 'UTC') AS second,
+  ride_id,
+  latitude,
+  longitude,
+  meter_reading,
+  ride_status,
+  passenger_count
+FROM
+  taxirides.realtime
+WHERE ride_status = 'dropoff'
+ORDER BY timestamp DESC
+LIMIT 1000
+)
+# calculate aggregations on stream for reporting:
+SELECT
+ ROW_NUMBER() OVER() AS dashboard_sort,
+ minute,
+ COUNT(DISTINCT ride_id) AS total_rides,
+ SUM(meter_reading) AS total_revenue,
+ SUM(passenger_count) AS total_passengers
+FROM streaming_data
+GROUP BY minute, timestamp
+
+#Click the streaming-taxi-pipeline or the new job name.Click STOP and select Cancel > STOP JOB.
+
+#Go to  Google Data Studio
+#On the Reports page, in the Start with a Template section, click the [+] Blank Report template.
+#Click EXPLORE DATA > Explore with Data Studio in BigQuery page.
+#Specify the below settings:
+Chart type: Combo chart
+Date range Dimension: dashboard_sort
+Dimension: dashboard_sort
+Drill Down: dashboard_sort (Make sure that Drill down option is turned ON)
+Metric: SUM() total_rides, SUM() total_passengers, SUM() total_revenue
+Sort: dashboard_sort, Ascending (latest rides first)
