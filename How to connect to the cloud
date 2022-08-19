@@ -13,3 +13,23 @@ How to check projects in the cloud:
 $ docker run --rm --volumes-from gcloud-config gcr.io/google.com/cloudsdktool/cloud-sdk:357.0.0 gcloud projects list
 PROJECT_ID                NAME                      PROJECT_NUMBER
 my-project-data-tutorial  My Project data tutorial  193<...>
+
+example from the lab:
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-02-306b207e<...>.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+student_01_60c76a6<...>@cloudshell:~ (qwiklabs-gcp-02-306b207e<...>)$ gcloud auth list
+Credentialed Accounts
+
+ACTIVE: *
+ACCOUNT: student-01-60c76a6<...>@qwiklabs.net
+
+To set the active account, run:
+    $ gcloud config set account `ACCOUNT`
+
+student_01_60c76a69<...>@cloudshell:~ (qwiklabs-gcp-02-306b207e<...>)$ gcloud config list project
+[core]
+project = qwiklabs-gcp-02-306b207ec<....>
+
+Your active configuration is: [cloudshell-30818]
+student_01_60c76a6<...>@cloudshell:~ (qwiklabs-gcp-02-306b207<...>)$
