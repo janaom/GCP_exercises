@@ -14,6 +14,7 @@ $ docker run --rm --volumes-from gcloud-config gcr.io/google.com/cloudsdktool/cl
 PROJECT_ID                NAME                      PROJECT_NUMBER
 my-project-data-tutorial  My Project data tutorial  193<...>
 
+---------------------
 example from the lab:
 Welcome to Cloud Shell! Type "help" to get started.
 Your Cloud Platform project in this session is set to qwiklabs-gcp-02-306b207e<...>.
